@@ -1,0 +1,33 @@
+.img-container {
+    width: 100%;
+    /* Se adapta al ancho del contenedor */
+    height: 0;
+    /* Altura inicial 0 para aplicar la técnica de padding */
+    padding-top: 100%;
+    /* Usa padding-top para mantener una relación de aspecto 1:1 (cuadrada) */
+    position: relative;
+    overflow: hidden;
+    /* Oculta contenido fuera de los límites */
+    border-radius: 5px;
+    /* Opcional: bordes redondeados */
+}
+
+.album-img {
+    position: absolute;
+    /* Posición absoluta para superponerse al contenedor */
+    top: 0;
+    left: 0;
+    width: 100%;
+    /* Se ajusta al ancho del contenedor */
+    height: 100%;
+    /* Ocupa toda la altura del contenedor */
+    object-fit: cover;
+    /* Recorta proporcionalmente para cubrir el espacio */
+    transition: transform 0.3s ease;
+    /* Animación suave (opcional) */
+}
+
+.album-img:hover {
+    transform: scale(1.05);
+    /* Efecto de zoom al pasar el ratón (opcional) */
+}
