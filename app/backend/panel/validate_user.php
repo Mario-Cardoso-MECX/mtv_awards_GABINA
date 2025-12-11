@@ -11,8 +11,10 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         $email = $_POST["email"];
         $pass  = $_POST["password"];
 
+        // Validar usuario contra la base de datos
         $data = $tabla_usuario->validateUser($email, $pass);
 
+        // Si hay datos y el usuario está activo (estatus 1)
         if ($data && intval($data->estatus_usuario) == 1) {
 
             // ===============================
@@ -25,29 +27,31 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             $_SESSION["email"] = $data->correo_usuario;
             $_SESSION["nickname"] = $data->nombre_usuario;
 
+            // Imagen por defecto si no tiene una
             $_SESSION["img"] = (empty($data->imagen_usuario))
                 ? (($data->sexo_usuario == 0) ? 'woman.png' : 'man.png')
                 : $data->imagen_usuario;
 
             // ===============================
-            //  REDIRECCIÓN SEGÚN ROL
+            //  REDIRECCIÓN SEGÚN ROL (IDS 1, 2, 3, 4)
             // ===============================
             switch (intval($data->id_rol)) {
 
-                case 128: // ADMINISTRADOR
+                case 1: // ADMINISTRADOR
                     header('Location: ../../views/panel/dashboard.php');
                     exit();
 
-                case 85: // ARTISTA
+                case 2: // ARTISTA
                     header('Location: ../../views/panel/dashboard_artista.php');
                     exit();
 
-                case 8:  // OPERADOR / PERSONAL
-                case 4:  // AUDIENCIA / USUARIO NORMAL
+                case 3:  // OPERADOR
+                case 4:  // AUDIENCIA
                     header('Location: ../../views/portal/index.php');
                     exit();
 
                 default:
+                    // Rol desconocido
                     session_unset();
                     session_destroy();
                     header('Location: ../../../index.php?error=Rol no permitido&type=warning');
