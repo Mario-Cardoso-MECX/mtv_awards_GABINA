@@ -192,13 +192,13 @@ $canciones = $tabla_canciones->readAllByArtista($id_artista);
                                                         <td>' . $cancion->nombre_cancion . '</td>
                                                         <td><a href="' . $cancion->url_cancion . '" target="_blank" class="btn btn-sm btn-primary">Ir al enlace</a></td>';
                                                 echo ($cancion->estatus_cancion == 0)
-                                                    ? '<td><a href="../../backend/panel/canciones/estatus_cancion.php?id=' . $cancion->id_acancion . '&estatus=1" class="btn btn-block btn-info">Habilitar</a></td>'
-                                                    : '<td><a href="../../backend/panel/canciones/estatus_cancion.php?id=' . $cancion->id_acancion . '&estatus=0" class="btn btn-block btn-outline-success">Deshabilitar</a></td>';
+                                                    ? '<td><a href="../../backend/panel/canciones/estatus_cancion.php?id=' . $cancion->id_cancion . '&estatus=1" class="btn btn-block btn-info">Habilitar</a></td>'
+                                                    : '<td><a href="../../backend/panel/canciones/estatus_cancion.php?id=' . $cancion->id_cancion . '&estatus=0" class="btn btn-block btn-outline-success">Deshabilitar</a></td>';
                                                 echo '<td>
-                                                        <a href="../../backend/panel/canciones/delete_cancion.php?id=' . $cancion->id_acancion . '" class="btn btn-block btn-xs bg-gradient-danger">
+                                                        <a href="../../backend/panel/canciones/delete_cancion.php?id=' . $cancion->id_cancion . '" class="btn btn-block btn-xs bg-gradient-danger">
                                                             <i class="fa fa-trash"></i>
                                                         </a>
-                                                        <a href="./cancion_detalles.php?id=' . $cancion->id_acancion . '" class="btn btn-block btn-xs text-white bg-gradient-warning">
+                                                        <a href="./cancion_detalles.php?id=' . $cancion->id_cancion . '" class="btn btn-block btn-xs text-white bg-gradient-warning">
                                                             <i class="fa fa-edit"></i>
                                                         </a>
                                                     </td>

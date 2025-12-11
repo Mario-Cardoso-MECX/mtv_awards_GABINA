@@ -33,17 +33,15 @@ $artistas = $tabla_artista->readAllArtists();
 </head>
 
 <body>
-    <!-- Preloader -->
     <div class="preloader d-flex align-items-center justify-content-center">
         <div class="lds-ellipsis"><div></div><div></div><div></div><div></div></div>
     </div>
 
-    <!-- Header -->
     <header class="header-area">
         <div class="oneMusic-main-menu">
             <div class="classy-nav-container breakpoint-off">
                 <div class="container">
-                    <nav class="classy-navbar justify-content-between" id="oneMusicNav">
+                    <div class="classy-navbar justify-content-between" id="oneMusicNav">
 
                         <a href="./index.php" class="nav-brand">
                             <img src="../../../recursos/img/system/mtv-logo-blanco.png" width="50%" alt="">
@@ -88,13 +86,12 @@ $artistas = $tabla_artista->readAllArtists();
                             </div>
                         </div>
 
-                    </nav>
+                    </div>
                 </div>
             </div>
         </div>
     </header>
 
-    <!-- Breadcumb -->
     <section class="breadcumb-area bg-img bg-overlay"
         style="background-image: url(../../../recursos/recursos_portal/img/bg-img/breadcumb3.jpg);">
         <div class="bradcumbContent">
@@ -103,7 +100,6 @@ $artistas = $tabla_artista->readAllArtists();
         </div>
     </section>
 
-    <!-- Álbum más votado -->
     <?php if (!empty($albumMasVotado)): ?>
         <section class="best-album-area section-padding-100 bg-overlay"
             style="background-image: url(../../../recursos/recursos_portal/img/bg-img/bg-2.jpg);">
@@ -149,7 +145,6 @@ $artistas = $tabla_artista->readAllArtists();
         </section>
     <?php endif; ?>
 
-    <!-- Catálogo de artistas -->
     <section class="album-catagory section-padding-100-0">
         <div class="container">
 
@@ -159,7 +154,11 @@ $artistas = $tabla_artista->readAllArtists();
                     <?php foreach ($artistas as $artista): ?>
                         <div class="col-12 col-sm-4 col-md-3 col-lg-2 single-album-item">
                             <div class="single-album">
-                                <img src="../../../recursos/recursos_portal/img/users/<?= $artista->imagen_usuario ?>" alt="">
+                                <?php 
+                                    // Validar imagen
+                                    $img_art = !empty($artista->imagen_usuario) ? $artista->imagen_usuario : 'default.png';
+                                ?>
+                                <img src="../../../recursos/img/users/<?= $img_art ?>" alt="<?= $artista->pseudonimo_artista ?>">
                                 <div class="album-info">
                                     <h5><?= $artista->pseudonimo_artista ?></h5>
                                     <p><?= $artista->nombre_genero ?></p>
@@ -176,7 +175,6 @@ $artistas = $tabla_artista->readAllArtists();
         </div>
     </section>
 
-    <!-- Footer -->
     <footer class="footer-area">
         <div class="container">
             <div class="row d-flex flex-wrap align-items-center">
@@ -208,34 +206,28 @@ $artistas = $tabla_artista->readAllArtists();
     <script src="../../../recursos/recursos_portal/js/plugins/plugins.js"></script>
     <script src="../../../recursos/recursos_portal/js/active.js"></script>
 
+    <script src="../../../recursos/recursos_panel/plugins/jquery/jquery.min.js"></script>
 
-    
-    <!-- jQuery -->
-<script src="../../../recursos/recursos_panel/plugins/jquery/jquery.min.js"></script>
+    <script src="../../../recursos/recursos_panel/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
 
-<!-- Bootstrap -->
-<script src="../../../recursos/recursos_panel/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="../../../recursos/recursos_panel/plugins/toastr/toastr.min.js"></script>
 
-<!-- Toastr -->
-<script src="../../../recursos/recursos_panel/plugins/toastr/toastr.min.js"></script>
+    <script src="../../../recursos/recursos_panel/js/adminlte.min.js"></script>
 
-<!-- AdminLTE -->
-<script src="../../../recursos/recursos_panel/js/adminlte.min.js"></script>
-
-<?php if (isset($_SESSION['message'])): ?>
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-        <?=
-            mostrar_alerta_mensaje(
-                $_SESSION['message']["type"],
-                $_SESSION['message']["description"],
-                $_SESSION['message']["title"]
-            );
-        ?>
-    });
-</script>
-<?php unset($_SESSION['message']); ?>
-<?php endif; ?>
+    <?php if (isset($_SESSION['message'])): ?>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            <?=
+                mostrar_alerta_mensaje(
+                    $_SESSION['message']["type"],
+                    $_SESSION['message']["description"],
+                    $_SESSION['message']["title"]
+                );
+            ?>
+        });
+    </script>
+    <?php unset($_SESSION['message']); ?>
+    <?php endif; ?>
 
 </body>
 </html>

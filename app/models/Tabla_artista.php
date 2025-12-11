@@ -1,5 +1,5 @@
 <?php
-require_once(__DIR__ . "/../config/Conecct.php");
+require_once(__DIR__ . "/../config/Constants.php");
 
 class Tabla_artista
 {
@@ -49,9 +49,18 @@ class Tabla_artista
     {
         /**
          * QUERY - SELECT
-         * SELECT * FROM artistas INNER JOIN generos ON artistas.id_genero = generos.id_genero ORDER BY pseudonimo_artista;
+         * CORREGIDO: Se agregó INNER JOIN usuarios para obtener la imagen_usuario
          */
-        $sql = "SELECT * FROM " . $this->table . " INNER JOIN generos ON " . $this->table . ".id_genero = generos.id_genero ORDER BY pseudonimo_artista;";
+        $sql = "SELECT 
+                    artistas.*, 
+                    generos.nombre_genero,
+                    usuarios.imagen_usuario 
+                FROM " . $this->table . " 
+                INNER JOIN generos ON artistas.id_genero = generos.id_genero 
+                INNER JOIN usuarios ON artistas.id_usuario = usuarios.id_usuario 
+                WHERE artistas.estatus_artista = 1
+                ORDER BY pseudonimo_artista;";
+        
         try {
             // Preparar la consulta
             $stmt = $this->connect->prepare($sql);
@@ -61,6 +70,7 @@ class Tabla_artista
             return (!empty($artists)) ? $artists : array();
         } catch (PDOException $e) {
             echo "Error en la consulta: " . $e->getMessage();
+            return array();
         }
     } //end readAllArtists
 
@@ -68,9 +78,15 @@ class Tabla_artista
     {
         /**
          * QUERY - SELECT
-         * SELECT * FROM artistas INNER JOIN generos ON artistas.id_genero = generos.id_genero WHERE artistas.id_artista = :id_artista;
+         * CORREGIDO: Se agregó INNER JOIN usuarios para obtener la imagen si se consulta uno solo
          */
-        $sql = "SELECT * FROM " . $this->table . " INNER JOIN generos ON " . $this->table . ".id_genero = generos.id_genero 
+        $sql = "SELECT 
+                    artistas.*, 
+                    generos.nombre_genero,
+                    usuarios.imagen_usuario 
+                FROM " . $this->table . " 
+                INNER JOIN generos ON artistas.id_genero = generos.id_genero 
+                INNER JOIN usuarios ON artistas.id_usuario = usuarios.id_usuario
                 WHERE " . $this->table . "." . $this->primary_key . " = :id_artista;";
         try {
             // Preparar la consulta
@@ -82,15 +98,12 @@ class Tabla_artista
             return (!empty($artist)) ? $artist : array();
         } catch (PDOException $e) {
             echo "Error en la consulta: " . $e->getMessage();
+            return array();
         }
     } //end readGetArtist
 
     public function updateArtist($id_artista = 0, $data = array())
     {
-        /**
-         * UPDATE artistas SET pseudonimo_artista = '', nacionalidad_artista = '' WHERE id_artista = ;
-         */
-
         $params = array();
         $fields = array();
 
@@ -125,9 +138,6 @@ class Tabla_artista
 
     public function deleteArtist($id_artista = 0)
     {
-        /**
-         * DELETE FROM artistas WHERE id_artista = ;
-         */
         try {
             $sql = 'DELETE FROM ' . $this->table . ' WHERE ' . $this->primary_key . ' = :id;';
 
@@ -149,9 +159,6 @@ class Tabla_artista
     // QUERIES : Consultas específicas
     //---------------------------
 
-    /**
-     * Obtener un artista por el ID del usuario
-     * @param int $id_usuario ID del usuario     */
     public function getArtistaByUsuario($id_usuario)
     {
         $sql = "SELECT * FROM " . $this->table . " WHERE id_usuario = :id_usuario LIMIT 1;";
@@ -171,32 +178,32 @@ class Tabla_artista
     {
         // Primera consulta: Obtener título del álbum y las canciones
         $sqlAlbum = "SELECT 
-                    a.titulo_album AS Album,
-                    c.nombre_cancion AS Cancion
-                 FROM 
-                    albumes a
-                 INNER JOIN 
-                    canciones c ON a.id_album = c.id_album
-                 WHERE 
-                    a.id_album = :id_album
-                 ORDER BY 
-                    c.nombre_cancion;";
+                     a.titulo_album AS Album,
+                     c.nombre_cancion AS Cancion
+                  FROM 
+                     albumes a
+                  INNER JOIN 
+                     canciones c ON a.id_album = c.id_album
+                  WHERE 
+                     a.id_album = :id_album
+                  ORDER BY 
+                     c.nombre_cancion;";
 
         // Segunda consulta: Obtener título del álbum, artista y canciones
         $sqlAlbumArtist = "SELECT 
-                          a.titulo_album AS Album,
-                          ar.pseudonimo_artista AS Artista,
-                          c.nombre_cancion AS Cancion
-                       FROM 
-                          albumes a
-                       INNER JOIN 
-                          artistas ar ON a.id_artista = ar.id_artista
-                       INNER JOIN 
-                          canciones c ON a.id_album = c.id_album
-                       WHERE 
-                          a.id_album = :id_album
-                       ORDER BY 
-                          c.nombre_cancion;";
+                           a.titulo_album AS Album,
+                           ar.pseudonimo_artista AS Artista,
+                           c.nombre_cancion AS Cancion
+                        FROM 
+                           albumes a
+                        INNER JOIN 
+                           artistas ar ON a.id_artista = ar.id_artista
+                        INNER JOIN 
+                           canciones c ON a.id_album = c.id_album
+                        WHERE 
+                           a.id_album = :id_album
+                        ORDER BY 
+                           c.nombre_cancion;";
 
         try {
             // Preparar la primera consulta
@@ -273,6 +280,7 @@ class Tabla_artista
             return [];
         }
     }
+
     public function getArtistAlbumDetails($id_album)
     {
         // Consulta para obtener la información completa del artista, álbum y canciones por id_album
@@ -289,7 +297,7 @@ class Tabla_artista
             al.descripcion_album,
             al.imagen_album,
             al.estatus_album,
-            c.id_acancion,
+            c.id_cancion, -- CORREGIDO: id_acancion a id_cancion
             c.nombre_cancion,
             c.fecha_lanzamiento_cancion,
             c.duracion_cancion,
@@ -319,9 +327,5 @@ class Tabla_artista
         }
     } //end getArtistAlbumDetails
 
-
-
-
-
-
 } //end Tabla_artistas
+?>
